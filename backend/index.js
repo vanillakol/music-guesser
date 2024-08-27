@@ -191,7 +191,7 @@ app.use(express.json());
 app.use(
     cors({
         credentials: true,
-        origin: "https://music-guesser-3ex0a5idh-millions-projects-5674557a.vercel.app"
+        origin: "https://music-guesser-api.vercel.app/"
     })
 );
 app.use(cookieParser());
