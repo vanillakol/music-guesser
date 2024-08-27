@@ -1,25 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
-const hashPassword = (password) => {
-    return new Promise((resolve, reject) => {
-        bcrypt.genSalt(12, (err, salt) => {
-            if (err) {
-                reject(err);
-            }
-            bcrypt.hash(password, salt, (err, hash) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(hash);
-            });
-        });
-    });
+// MongoDB URL and JWT Secret
+const MONGO_URI = "mongodb+srv://ezmill16:osa4QlPEm7t22e5z@musicguesser.id1dc.mongodb.net/?retryWrites=true&w=majority&appName=musicguesser";
+const JWT_SECRET = "945938ndf";
+
+const hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(12);
+    return bcrypt.hash(password, salt);
 };
 
 const comparePassword = (password, hashed) => {
@@ -27,12 +19,13 @@ const comparePassword = (password, hashed) => {
 };
 
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://ezmill16:osa4QlPEm7t22e5z@musicguesser.id1dc.mongodb.net/?retryWrites=true&w=majority&appName=musicguesser"
-).then(() => {
-    console.log('connected to the database');
-}).catch((e) => {
-    console.log('database not connected', e);
-});
+mongoose.connect(MONGO_URI)
+    .then(() => {
+        console.log('connected to the database');
+    })
+    .catch((e) => {
+        console.log('database not connected', e);
+    });
 
 // Define User model
 const { Schema } = mongoose;
@@ -68,7 +61,7 @@ const loginUser = async (req, res) => {
         // check if password matches
         const match = await comparePassword(password, user.password);
         if (match) {
-            jwt.sign({ email: user.email, id: user._id, name: user.name }, "945938ndf", { expiresIn: '1h' }, (err, token) => {
+            jwt.sign({ email: user.email, id: user._id, name: user.name }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
                 if (err) {
                     throw err;
                 }
@@ -167,14 +160,15 @@ const registerUser = async (req, res) => {
 const getProfile = (req, res) => {
     const { token } = req.cookies;
     if (token) {
-        jwt.verify(token, "945938ndf", {}, (err, user) => {
-            if (err) {
-                throw err;
-            }
+        try {
+            const user = jwt.verify(token, JWT_SECRET);
             res.json(user);
-        });
+        } catch (err) {
+            console.error(err);
+            res.status(401).json({ error: 'Invalid token' });
+        }
     } else {
-        res.json(null);
+        res.status(401).json({ error: 'No token provided' });
     }
 };
 
