@@ -191,7 +191,7 @@ app.use(express.json());
 app.use(
     cors({
         credentials: true,
-        origin: "https://music-guesser-api.vercel.app/"
+        origin: true
     })
 );
 app.use(cookieParser());
