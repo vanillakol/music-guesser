@@ -27,7 +27,7 @@ const comparePassword = (password, hashed) => {
 };
 
 // Connect to MongoDB
-mongoose.connect(mongodb+srv://ezmill16:osa4QlPEm7t22e5z@musicguesser.id1dc.mongodb.net/?retryWrites=true&w=majority&appName=musicguesser
+mongoose.connect("mongodb+srv://ezmill16:osa4QlPEm7t22e5z@musicguesser.id1dc.mongodb.net/?retryWrites=true&w=majority&appName=musicguesser"
 ).then(() => {
     console.log('connected to the database');
 }).catch((e) => {
