@@ -190,7 +190,7 @@ app.use(express.json());
 app.use(
     cors({
         credentials: true,
-        origin: "http://localhost:5173"
+        origin: "https://music-guesser-6her.vercel.app/"
     })
 );
 app.use(cookieParser());
