@@ -11,7 +11,7 @@ import UserContextProvider from '../context/userContext'
 import DashBoard from './pages/DashBoard'
 import Logout from './pages/Logout'
 
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = 'music-guesser-6her.vercel.app'
 axios.defaults.withCredentials = true
 function App() {
   
